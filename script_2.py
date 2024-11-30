@@ -74,4 +74,3 @@ with open('./sequence_analysis.csv', 'w', encoding='utf-8', newline='') as outpu
                          rev_complement(seq_record),
                          get_protein_lengths_per_frame(seq_record)
                          ])
-    writer.writerow("")

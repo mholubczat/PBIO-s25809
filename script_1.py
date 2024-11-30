@@ -28,7 +28,7 @@ print("seq_protein =", seq_protein)
 seq_rev_complement = seq.reverse_complement()
 print("seq_rev_complement =", seq_rev_complement)
 
-with open('../../../../../Desktop/pythonProject/sequence_analysis.txt', 'w', encoding='utf-8') as output:
+with open('./sequence_analysis.txt', 'w', encoding='utf-8') as output:
     output.write("Oryginalna sekwencja DNA: " + str(seq) + "\n")
     output.write("Liczba nukleotydów:\n")
     output.write(" A: " + str(countA) + "\n")
