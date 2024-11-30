@@ -2,7 +2,7 @@ from Bio.Seq import Seq
 from Bio.SeqUtils import gc_fraction
 
 seq = Seq("AAGAAATTCCAAGTCCAGGGATACACAAACAGGTGTACAGC"
-       "AAATCATGTAGGTGGTACTTTTCCCCTAAGTTATAATATT")
+          "AAATCATGTAGGTGGTACTTTTCCCCTAAGTTATAATATT")
 
 countA = seq.count("A")
 print("countA =", countA)
