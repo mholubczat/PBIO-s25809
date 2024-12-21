@@ -1,41 +1,52 @@
-from Bio.Seq import Seq
-from Bio.SeqUtils import gc_fraction
+from Bio import Align
 
-seq = Seq("AAGAAATTCCAAGTCCAGGGATACACAAACAGGTGTACAGC"
-       "AAATCATGTAGGTGGTACTTTTCCCCTAAGTTATAATATT")
+seq_1 = "AAAACCCCTTGGTTTT"
+seq_2 = "AAACACCCTTTGTTTA"
 
-countA = seq.count("A")
-print("countA =", countA)
+aligner = Align.PairwiseAligner()
+alignments = aligner.align(seq_1, seq_2)
+score = aligner.score(seq_1, seq_2)
 
-countT = seq.count("T")
-print("countT =", countT)
+def interpret_alignment(coordinates):
+    matches = []
+    mismatches = []
+    for i in range(len(coordinates[0]) - 1):
+        if coordinates[0][i] == coordinates[0][i+1] or coordinates[1][i] == coordinates[1][i+1]:
+            mismatches.append({"target": [coordinates[0][i].item(), coordinates[0][i+1].item()], "query": [coordinates[1][i].item(), coordinates[1][i+1].item()]})
+        else:
+            matches.append({"target": [coordinates[0][i].item(), coordinates[0][i+1].item()], "query": [coordinates[1][i].item(), coordinates[1][i+1].item()]})
+    print("matches and mismatches in sequences:")
+    print("matches", matches)
+    print("mismatches", mismatches)
 
-countC = seq.count("C")
-print("countC =", countC)
 
-countG = seq.count("G")
-print("countG =", countG)
+def count_mismatches(all_alignments):
+    count = 0
+    for alg in all_alignments:
+        coordinates = alg.coordinates
+        for i in range(len(coordinates[0]) - 1):
+            if coordinates[0][i] == coordinates[0][i + 1] or coordinates[1][i] == coordinates[1][i + 1]:
+                count += 1
+                break
+    return count
 
-GC_fraction = gc_fraction(seq)
-print("countGC =", GC_fraction)
 
-seq_rna = seq.transcribe()
-print("seqRna =", seq_rna)
+print("Alignment score between sequences", seq_1, seq_2, "is", score)
+print("*******************************************************")
+print("Displaying top 3 alignments")
+iteration = 0
+for alignment in alignments:
+    iteration += 1
+    print("-------------------------------------------------------")
+    print("Alignment", iteration)
+    print(alignment)
+    print("coordinates")
+    print(alignment.coordinates)
+    interpret_alignment(alignment.coordinates)
+    if iteration == 3:
+        break
 
-seq_protein = seq.translate()
-print("seq_protein =", seq_protein)
+print("*******************************************************")
+print("There are", count_mismatches(alignments), "alignments containing at least one mismatch")
 
-seq_rev_complement = seq.reverse_complement()
-print("seq_rev_complement =", seq_rev_complement)
 
-with open('../../../../../Desktop/pythonProject/sequence_analysis.txt', 'w', encoding='utf-8') as output:
-    output.write("Oryginalna sekwencja DNA: " + str(seq) + "\n")
-    output.write("Liczba nukleotydów:\n")
-    output.write(" A: " + str(countA) + "\n")
-    output.write(" T: " + str(countT) + "\n")
-    output.write(" C: " + str(countC) + "\n")
-    output.write(" G: " + str(countG) + "\n")
-    output.write("Zawartość GC: " + str("{:.2f}%".format(GC_fraction * 100)) + "\n")
-    output.write("Transkrybowany RNA: " + str(seq_rna) + "\n")
-    output.write("Translowane białko: " + str(seq_protein) + "\n")
-    output.write("Odwrotne dopełnienie: " + str(seq_rev_complement) + "\n")
