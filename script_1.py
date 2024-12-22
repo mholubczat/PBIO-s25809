@@ -23,11 +23,8 @@ def interpret_alignment(coordinates):
 def count_mismatches(all_alignments):
     count = 0
     for alg in all_alignments:
-        coordinates = alg.coordinates
-        for i in range(len(coordinates[0]) - 1):
-            if coordinates[0][i] == coordinates[0][i + 1] or coordinates[1][i] == coordinates[1][i + 1]:
-                count += 1
-                break
+        if alg.counts().mismatches > 0:
+            count += 1
     return count
 
 
